@@ -3,7 +3,7 @@
 
 *.md diff=markdown eol=crlf
 *.sh diff=sh eol=lf
-
+*.py diff=py eol=lf
 
 # Git attributes
 .gitignore text eol=lf
