@@ -1,7 +1,5 @@
-from extra \
-    import Extra
-
-from keras import Model
+from keras \
+    import Model
 
 import tensorflow \
     as tf
@@ -29,17 +27,8 @@ from keras.layers \
 #model.summary()
 
 
-class Application:
+class Layer:
     def __init__(self):
-        self.title = 'ai'
-        self.optional = Extra()
-
-    def initialise(self):
-        print(self.title)
         pass
 
-    def execute(self):
-        pass
 
-    def gc(self):
-        pass
