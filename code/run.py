@@ -27,6 +27,7 @@ def main():
 
     dataset.train()
 
+    wandb.tensorflow.log( dataset.last_history )
     wandb.tensorflow.log( dataset.model.summary() )
 
 

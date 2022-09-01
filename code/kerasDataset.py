@@ -1,3 +1,5 @@
+import string
+
 import tensorflow \
     as tf
 
@@ -5,6 +7,8 @@ import tensorflow \
 import PIL
 import numpy
 
+
+import secrets
 
 from tensorflow \
     import keras
@@ -15,31 +19,8 @@ from tensorflow.keras \
 from tensorflow.keras.models \
     import Sequential
 
-
-class KerasProperties:
-    def __init__(self):
-        self.batch_size = 64
-
-        self.height = 128
-        self.width = 384
-
-        self.validation_size = 0.25
-        self.seed = 1234
-
-    def get_batch_size(self):
-        return self.batch_size
-
-    def get_height(self):
-        return self.height
-
-    def get_width(self):
-        return self.width
-
-    def get_validation_size(self):
-        return self.validation_size
-
-    def get_seed(self):
-        return self.seed
+from properties \
+    import KerasProperties
 
 
 class KerasDataset:
@@ -54,7 +35,8 @@ class KerasDataset:
 
         self.model = None
 
-        self.epoch = 100
+        self.epoch = 10
+        self.last_history = None
 
     def setup_dataset(self):
         train_dataset=tf.keras.utils.image_dataset_from_directory(
@@ -121,5 +103,6 @@ class KerasDataset:
             epochs=self.epoch
         )
 
-        return history
+        self.last_history = history
+        return self.last_history
 
