@@ -3,6 +3,9 @@ import wandb
 from wandb.keras \
     import WandbCallback
 
+from kerasDataset \
+    import KerasDataset
+
 
 def main():
     wandb.init(project="codespace", entity="designermadsen")
