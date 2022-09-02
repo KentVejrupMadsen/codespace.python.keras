@@ -12,7 +12,8 @@ dataset_dir = '/home/madsen/codespace/frameworks/keras/dataset/train'
 
 
 def main():
-    wandb.init(project="codespace", entity="designermadsen")
+    wandb.init(project="codespace",
+               entity="designermadsen")
     print("run.py")
 
     dataset = KerasDataset()
