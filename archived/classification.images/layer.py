@@ -1,4 +1,4 @@
-from keras \
+from kerasDataset \
     import Model
 
 import tensorflow \
@@ -10,10 +10,10 @@ from tensorflow \
 import numpy \
     as np
 
-from keras.models \
+from kerasDataset.models \
     import Sequential
 
-from keras.layers \
+from kerasDataset.layers \
     import *
 
 
