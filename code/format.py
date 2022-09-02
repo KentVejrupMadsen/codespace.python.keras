@@ -28,8 +28,8 @@ def iterate(paths):
         artefact_name = str(iterator) + extension
         directory_path = os.path.dirname(path)
         full = os.path.join(directory_path, artefact_name)
-        
-        print( "renamed to: " + full )
+
+        print("renamed to: " + full)
         os.rename(path, full)
 
 
