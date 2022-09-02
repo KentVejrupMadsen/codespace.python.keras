@@ -1,11 +1,9 @@
-import string
-
 import tensorflow \
     as tf
 
 
 import PIL
-import numpy
+import numpy as np
 
 
 import secrets
@@ -21,6 +19,8 @@ from tensorflow.keras.models \
 
 from properties \
     import KerasProperties
+
+AUTOTUNE = tf.data.AUTOTUNE
 
 
 class KerasDataset:
@@ -39,6 +39,8 @@ class KerasDataset:
         self.last_history = None
 
     def setup_dataset(self):
+        global AUTOTUNE
+
         train_dataset=tf.keras.utils.image_dataset_from_directory(
             self.path,
             validation_split=self.properties.get_validation_size(),
@@ -46,6 +48,7 @@ class KerasDataset:
             seed=self.properties.get_seed(),
             image_size=(self.properties.get_height(), self.properties.get_width()), batch_size=self.properties.get_batch_size()
         )
+        train_dataset.cache().shuffle(10).prefetch(buffer_size=AUTOTUNE)
 
         validation_dataset = tf.keras.utils.image_dataset_from_directory(
             self.path,
@@ -55,6 +58,7 @@ class KerasDataset:
             image_size=(self.properties.get_height(), self.properties.get_width()),
             batch_size=self.properties.get_batch_size()
         )
+        validation_dataset.cache().prefetch(buffer_size=AUTOTUNE)
 
         self.dataset = train_dataset
         self.validation = validation_dataset
@@ -105,4 +109,18 @@ class KerasDataset:
 
         self.last_history = history
         return self.last_history
+
+    def classify(self, url):
+        path = tf.keras.utils.get_file('classify', origin=url)
+        img = tf.keras.utils.load_img(path, target_size=(self.properties.get_height(), self.properties.get_width()))
+
+        img_batch = tf.keras.utils.img_to_array(img)
+        img_batch = tf.expand_dims(img_batch, 0)
+
+        predictions = self.model.predict(img_batch)
+        score = tf.nn.softmax(predictions[0])
+
+        _class_ = self.dataset.class_names[np.argmax(score)]
+
+        print("this image belongs to: {} with {:.2f} percent confidence".format(_class_, 100 * np.max(score)))
 
