@@ -1,5 +1,13 @@
+import variables
+import setup
+
+
 def main():
-    pass
+    setup.start()
+
+
+
+    setup.end()
 
 
 if __name__ == '__main__':
