@@ -9,10 +9,9 @@ from os \
     walk, \
     path
 
-from shutil \
-    import move
+import os
 
-root_path = r'/mnt/d/DataSets/GamesAsDataSet'
+root_path = r'/mnt/d/DataSets/ScreenshotAsDataset/uncategorised/1'
 
 
 def get_directory(value):
@@ -24,7 +23,7 @@ def get_directory(value):
 
 
 def rename(
-        root_path: str,
+        directory_path: str,
         filename: str,
         fid: int
 ):
@@ -37,19 +36,26 @@ def rename(
     )
 
     original = join(
-        root_path,
+        directory_path,
         filename
     )
 
     new_path = join(
-        root_path,
+        directory_path,
         convert_fid
     )
 
-    move(
-        original,
-        new_path
-    )
+    print("original name:")
+    print(original)
+
+    print()
+
+    print("new name:")
+    print(new_path)
+
+    print()
+
+    os.rename(original, new_path)
 
 
 def main():
@@ -68,10 +74,10 @@ def main():
                 file
             )
 
-            dir = get_directory(full_path)
+            dir_path = get_directory(full_path)
 
             rename(
-                dir,
+                dir_path,
                 file,
                 counter
             )

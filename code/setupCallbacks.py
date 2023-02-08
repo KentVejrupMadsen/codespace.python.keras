@@ -1,7 +1,10 @@
 from tensorflow.python.keras.callbacks \
+    import EarlyStopping
+
+from tensorflow.python.keras.callbacks \
     import ModelCheckpoint
 
-from variables \
+from configuration.variables \
     import get_checkpoint_path
 
 
@@ -13,12 +16,25 @@ def make_checkpoint_callback() -> ModelCheckpoint:
     )
 
 
-def call_callbacks() -> list:
-    retVal = []
+def make_early_stopper_callback() -> EarlyStopping:
+    return EarlyStopping(
+        monitor='val_loss',
+        mode='min',
+        verbose=1,
+        patience=2
+    )
 
-    retVal.append(
+
+def call_callbacks() -> list:
+    ret_val = []
+
+    ret_val.append(
         make_checkpoint_callback()
     )
 
-    return retVal
+    ret_val.append(
+        make_early_stopper_callback()
+    )
+
+    return ret_val
 
