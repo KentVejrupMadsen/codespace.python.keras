@@ -1,4 +1,4 @@
-from configuration.variable_setup \
+from saved.configuration.variable_setup \
     import setup_arrays
 
 # Variables

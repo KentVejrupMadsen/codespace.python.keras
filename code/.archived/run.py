@@ -4,13 +4,12 @@ from tensorflow.python.framework.config \
     list_physical_devices, \
     set_memory_growth
 
-from configuration.machine_state \
+from custom.configuration \
     import \
     get_epoch, \
-    get_batch_size_value, \
-    get_validation_split
+    get_batch_size_value
 
-from configuration.path_configuration \
+from custom.configuration \
     import set_dataset_path
 
 import \

@@ -1,7 +1,7 @@
-from configuration.path_configuration \
+from custom.configuration \
     import get_log_directory
 
-from configuration.wandb_config \
+from custom.configuration \
     import \
     get_wandb_project_name, \
     get_sync_tensorboard

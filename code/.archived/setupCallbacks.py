@@ -7,7 +7,7 @@ from tensorflow.python.keras.callbacks \
 from tensorflow.python.keras.callbacks \
     import ModelCheckpoint
 
-from configuration.path_configuration \
+from custom.configuration \
     import \
     get_checkpoint_path, \
     get_log_path

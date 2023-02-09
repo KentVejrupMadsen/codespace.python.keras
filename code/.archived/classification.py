@@ -1,7 +1,7 @@
 from keras.preprocessing.image \
     import ImageDataGenerator
 
-from configuration.path_configuration import \
+from custom.configuration import \
     get_train_path, \
     get_validation_path, \
     get_test_path, \
@@ -9,7 +9,7 @@ from configuration.path_configuration import \
     get_cache_test_path, \
     get_cache_validation_path
 
-from configuration.machine_state \
+from custom.configuration \
     import \
     get_default_image_size, \
     get_normalise_value, \
@@ -18,7 +18,7 @@ from configuration.machine_state \
     get_color_mode_type, \
     get_validation_split
 
-from configuration.random_config \
+from custom.configuration \
     import generate_seed
 
 from os \

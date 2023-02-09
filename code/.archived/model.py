@@ -9,7 +9,7 @@ from keras.layers \
 from tensorflow.python.keras.models \
     import Model
 
-from configuration.machine_state \
+from custom.configuration \
     import \
     get_default_width, \
     get_default_height, \
