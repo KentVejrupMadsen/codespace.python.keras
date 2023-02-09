@@ -12,7 +12,12 @@ from tensorflow.python.keras.models \
 from configuration.machine_state \
     import \
     get_default_width, \
-    get_default_height
+    get_default_height, \
+    get_activation_type, \
+    get_weight_set, \
+    get_include_weight_top, \
+    get_optimizer_type, \
+    get_loss_function_type
 
 
 def create_model() -> Model:
@@ -22,9 +27,10 @@ def create_model() -> Model:
             get_default_height(),
             3
         ),
-        weights='imagenet',
-        include_top=False,
-        classifier_activation=''
+        weights=get_weight_set(),
+        include_top=get_include_weight_top(),
+        classifier_activation=get_activation_type(),
+        pooling='avg'
     )
 
     for layer in vgg.layers:
@@ -35,7 +41,7 @@ def create_model() -> Model:
     )
 
     prediction = Dense(
-        3,
+        4,
         activation='softmax'
     )(x)
 
@@ -45,11 +51,13 @@ def create_model() -> Model:
     )
 
     model.compile(
-        loss= "sparse_categorical_crossentropy",
-        optimizer= "adam",
-        metrics= [
+        loss=get_loss_function_type(),
+        optimizer=get_optimizer_type(),
+
+        metrics=[
             "accuracy"
-        ]
+        ],
+
     )
 
     model.summary()

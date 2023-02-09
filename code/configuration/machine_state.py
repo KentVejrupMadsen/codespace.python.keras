@@ -1,6 +1,14 @@
 optimizer = 'adam'
+class_mode_type = 'sparse'
+color_mode_type = 'rgb'
 
-validation_split = 0.4
+activation_type = 'softmax'
+loss_func_type = 'sparse_categorical_crossentropy'
+
+weight_set = 'imagenet'
+include_weight_top = False
+
+validation_split = 0.5
 
 decay_steps = 2000
 decay_rate = 0.4
@@ -8,10 +16,40 @@ decay_rate = 0.4
 normalise_value = 255.0
 epoch = 10
 
-batch_size = 32
+batch_size = 3
 
 image_width_size = 256
 image_height_size = 256
+
+
+def get_loss_function_type() -> str:
+    global loss_func_type
+    return loss_func_type
+
+
+def get_include_weight_top() -> bool:
+    global include_weight_top
+    return include_weight_top
+
+
+def get_weight_set() -> str:
+    global weight_set
+    return weight_set
+
+
+def get_activation_type() -> str:
+    global activation_type
+    return activation_type
+
+
+def get_color_mode_type():
+    global color_mode_type
+    return color_mode_type
+
+
+def get_class_mode_type() -> str:
+    global class_mode_type
+    return class_mode_type
 
 
 def set_optimizer_type(
