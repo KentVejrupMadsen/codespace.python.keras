@@ -32,7 +32,7 @@ def set_wandb_project_name(
 ##################################################################################################
 
 
-wandb_settings_sync_tensorboard = True
+wandb_settings_sync_tensorboard = False
 
 
 def get_wandb_sync_tensorboard() -> bool:
@@ -83,7 +83,7 @@ def set_wandb_mode(
 ##################################################################################################
 
 
-wandb_settings_save_code = True
+wandb_settings_save_code = False
 
 
 def get_wandb_save_code() -> bool:

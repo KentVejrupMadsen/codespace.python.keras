@@ -5,7 +5,7 @@ image_height = 256
 preserve_aspect = True
 
 validation_split = 0.45
-epocs = 10
+epochs = 10
 
 
 def get_batch_size() -> int:
@@ -34,5 +34,5 @@ def get_image_height() -> int:
 
 
 def get_epochs() -> int:
-    global epocs
-    return epocs
+    global epochs
+    return epochs

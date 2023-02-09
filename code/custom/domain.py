@@ -7,7 +7,7 @@ from custom.stages.kera_model \
 from custom.additional.setup_wandb \
     import SetupWandb
 
-from custom.configuration.Features \
+from custom.configuration.wandb_variables \
     import get_setup_of_wandb
 
 
@@ -22,7 +22,6 @@ class Domain:
         if get_setup_of_wandb():
             self.__wandb = SetupWandb()
             self.__wandb.execute()
-
 
     def execute(self):
         pass

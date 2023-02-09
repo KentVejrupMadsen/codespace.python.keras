@@ -1,5 +1,6 @@
+# https://wandb.ai/site/experiment-tracking
 import wandb
-from custom.configuration.Features \
+from custom.configuration.wandb_variables \
     import \
     get_wandb_project_name, \
     get_wandb_sync_tensorboard, \
@@ -10,7 +11,26 @@ from custom.configuration.Features \
     get_wandb_notes, \
     get_wandb_group
 
+from custom.configuration.tensorflow_settings import \
+    get_global_settings
 
+######################################################################################
+configuration = None
+
+
+def get_configuration() -> dict:
+    global configuration
+    return configuration
+
+
+def set_configuration(
+        value: dict
+):
+    global configuration
+    configuration = value
+
+
+######################################################################################
 class SetupWandb:
     def __init__(self):
         wandb.init(
@@ -25,8 +45,11 @@ class SetupWandb:
         )
 
     def execute(self):
-        pass
+        set_configuration(
+            get_global_settings()
+        )
+        wandb.config = get_configuration()
 
     def clear(self):
-        pass
+        wandb.finish(0, True)
 
