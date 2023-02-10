@@ -13,6 +13,7 @@ epochs = None
 image_width = None
 image_height = None
 image_color_channels = None
+image_color_mode = None
 
 preserve_aspect = True
 
@@ -23,6 +24,26 @@ max_classes = None
 seed = None
 
 model_name = None
+
+
+def get_image_color_mode():
+    global image_color_mode
+
+    if image_color_mode is None:
+        set_image_color_mode(
+            get_value_from_global_images_settings(
+                'color'
+            )['mode']
+        )
+
+    return image_color_mode
+
+
+def set_image_color_mode(
+        value: str
+):
+    global image_color_mode
+    image_color_mode = value
 
 
 def get_model_name():

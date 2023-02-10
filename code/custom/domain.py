@@ -17,23 +17,6 @@ from custom.configuration.wandb_variables \
 from custom.configuration.tensorflow_settings \
     import get_global_settings
 
-from custom.configuration.global_entries \
-    import \
-    get_image_width, \
-    get_image_height, \
-    get_max_classes, \
-    get_epochs, \
-    get_batch_size, \
-    get_validation_split, \
-    get_preserve_aspect
-
-
-def get_image_size_from_settings():
-    return (
-        get_image_width(),
-        get_image_height()
-    )
-
 
 def get_dataset_path_from_settings():
     return get_global_settings()['dataset']['path']
@@ -42,18 +25,10 @@ def get_dataset_path_from_settings():
 class Domain:
     def __init__(self):
         self.setup = Setup()
-        self.model = CustomModel(
-            (
-                get_image_width(),
-                get_image_height(),
-                3
-            )
-        )
+        self.model = CustomModel()
 
         self.model.early_stopper_added()
         self.model.checkpoint_added()
-
-        print(self.model.callbacks)
 
         self.__wandb = None
 
@@ -63,48 +38,8 @@ class Domain:
             self.__wandb.execute()
 
     def execute(self):
-        batch_size = get_batch_size()
-
-        epochs_size = get_epochs()
-        seed_size = get_global_settings()['algorithm']['seed']
-        validation_split_size = get_global_settings()['algorithm']['validation']['split']
-
-        to_be_cropped = get_global_settings()['images']['keep_aspect_ratio']
-        color_mode = get_global_settings()['images']['color']['mode']
-
-        training = image_dataset_from_directory(
-            get_dataset_path_from_settings(),
-            color_mode=color_mode,
-            batch_size=batch_size,
-            shuffle=True,
-            crop_to_aspect_ratio=to_be_cropped,
-            image_size=get_image_size_from_settings(),
-            subset='training',
-            validation_split=validation_split_size,
-            seed=seed_size
-        )
-
-        validation = image_dataset_from_directory(
-            get_dataset_path_from_settings(),
-            color_mode=color_mode,
-            batch_size=batch_size,
-            shuffle=True,
-            crop_to_aspect_ratio=to_be_cropped,
-            image_size=get_image_size_from_settings(),
-            subset='validation',
-            validation_split=validation_split_size,
-            seed=seed_size
-        )
-
-        Rescaling(1./255)
-
-        history = self.model.get_model().fit(
-            training,
-            validation_data=validation,
-            epochs=epochs_size,
-            callbacks=self.model.get_callbacks(),
-            shuffle=True,
-            validation_freq=50
+        self.model.fit(
+            get_dataset_path_from_settings()
         )
 
     def garbage_collection(self):
@@ -123,6 +58,4 @@ class Domain:
     def is_wandb_none(self):
         return self.__wandb is None
 
-    def debug(self):
-        self.model.debug()
 
