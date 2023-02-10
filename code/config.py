@@ -28,8 +28,8 @@ set_global_settings(
 
             'path': '/home/madsen/models',
 
-            'batch_size': 1,
-            'epochs': 1,
+            'batch_size': 5,
+            'epochs': 10,
 
             'seed': generate_seed(),
 

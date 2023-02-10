@@ -1,4 +1,24 @@
+import wandb
+
 setup_of_wandb = False
+wandb_object = None
+
+
+def get_wandb() -> wandb.run:
+    global wandb_object
+
+    if wandb_object is None:
+        run = wandb.init()
+        set_wandb(run)
+
+    return wandb_object
+
+
+def set_wandb(
+        value: wandb.run
+) -> None:
+    global wandb_object
+    wandb_object = value
 
 
 def get_setup_of_wandb() -> bool:

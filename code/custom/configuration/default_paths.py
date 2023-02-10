@@ -1,5 +1,5 @@
-models_path = '/home/madsen/models'
-checkpoint_path = '/home/madsen/checkpoint'
+models_path = '/home/madsen/models/'
+checkpoint_path = '/home/madsen/checkpoint/'
 
 log_path = '/tmp/logs/'
 

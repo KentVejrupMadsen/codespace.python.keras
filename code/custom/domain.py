@@ -27,9 +27,6 @@ class Domain:
         self.setup = Setup()
         self.model = CustomModel()
 
-        self.model.early_stopper_added()
-        self.model.checkpoint_added()
-
         self.__wandb = None
 
     def initialise(self):

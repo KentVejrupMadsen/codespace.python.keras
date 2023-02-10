@@ -12,8 +12,33 @@ def log_setup():
         'python'
     )
 
-    wandb.init().log_artifact(art)
+    wandb.init().log_artifact(
+        art
+    )
 
-    checkpoint = wandb.Artifact('checkpoint', 'save-data')
-    checkpoint.add_dir('/tmp/checkpoint')
-    wandb.init().log_artifact(checkpoint)
+    checkpoint = wandb.Artifact(
+        'checkpoint',
+        'save-data'
+    )
+
+    checkpoint.add_dir(
+        '/tmp/checkpoint'
+    )
+
+    wandb.init().log_artifact(
+        checkpoint
+    )
+
+    save_tf = wandb.Artifact(
+        'model',
+        'tf'
+    )
+
+    save_tf.add_dir('/tmp/horus.tf')
+
+    wandb.init().log_artifact(
+        save_tf
+    )
+
+
+

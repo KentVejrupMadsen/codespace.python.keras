@@ -1,5 +1,8 @@
 from keras \
-    import layers, Input, Model
+    import  \
+    layers,  \
+    Input,    \
+    Model
 
 from keras.layers \
     import Rescaling
@@ -7,24 +10,39 @@ from keras.layers \
 from keras.utils \
     import image_dataset_from_directory
 
-from tensorflow.python.keras.callbacks \
-    import \
-    EarlyStopping, \
-    ModelCheckpoint
+from tensorflow.python.keras.models \
+    import load_model
 
+from tensorflow.python.keras.optimizer_v2.adam \
+    import Adam
+
+# Praise the sun
 from custom.configuration.global_entries \
-    import \
-    get_epochs, \
-    get_batch_size, \
-    get_image_width, \
-    get_image_height, \
-    get_validation_split, \
-    get_preserve_aspect, \
-    get_max_classes, \
-    get_model_name, \
-    get_seed, \
-    get_image_color_mode, \
+    import                                \
+    get_epochs,                            \
+    get_batch_size,                         \
+    get_image_width,                         \
+    get_image_height,                         \
+    get_validation_split,                      \
+    get_preserve_aspect,                        \
+    get_max_classes,                             \
+    get_model_name,                               \
+    get_seed,                                      \
+    get_image_color_mode,                           \
     get_image_color_channels
+
+from custom.stages.callback_factories \
+    import callback_setup
+
+from custom.configuration.default_paths \
+    import get_checkpoint_path
+
+import wandb
+from tensorflow.python.keras.callbacks \
+    import History
+
+from os.path \
+    import isdir
 
 
 class CustomModel:
@@ -49,6 +67,7 @@ class CustomModel:
             preserve_aspect: bool = get_preserve_aspect(),
 
             seed: int = get_seed(),
+
             split_dataset_for_validation: int = get_validation_split(),
             kernel_value: tuple = (3, 3),
             color_channels: int = get_image_color_channels()
@@ -77,42 +96,14 @@ class CustomModel:
         self.split_sample = split_dataset_for_validation
 
         self.callbacks = []
+        callback_setup(self.callbacks)
 
         self.setup(
-            model_size_width,
-            model_size_height
+                model_size_width,
+                model_size_height
         )
 
-    def early_stopper_added(self):
-        callbacks = self.callbacks
-        early_stopping = EarlyStopping(
-            monitor="loss",
-            mode="min",
-            verbose=1,
-            patience=5
-        )
-
-        callbacks.append(
-            early_stopping
-        )
-
-    def checkpoint_added(self):
-        callbacks = self.callbacks
-
-        checkpoint_callback = ModelCheckpoint(
-            filepath='/tmp/checkpoint/',
-            save_weights_only=False,
-            save_best_only=True,
-            mode='max',
-            monitor='accuracy',
-            verbose=0,
-            save_freq=4,
-            steps_per_execution=50
-        )
-
-        callbacks.append(
-            checkpoint_callback
-        )
+        self.class_names = None
 
     def setup(
             self,
@@ -189,12 +180,21 @@ class CustomModel:
             )
         )
 
-        self.model.summary()
+        found = isdir('/tmp/horus.tf')
+
+        if found:
+            self.model = load_model('/tmp/horus.tf')
 
     def compile(self):
+        optimizer = Adam(
+            learning_rate=0.015,
+            amsgrad=True,
+            decay=0.05
+        )
+
         self.model.compile(
             loss='SparseCategoricalCrossentropy',
-            optimizer='adam',
+            optimizer=optimizer,
             metrics=[
                 "accuracy"
             ]
@@ -210,6 +210,13 @@ class CustomModel:
             self,
             path_to_dataset: str
     ):
+        wandb.log(
+            {
+                'summary': self.model.summary()
+            },
+            commit=False
+        )
+
         training = image_dataset_from_directory(
             path_to_dataset,
             color_mode=self.get_image_color_mode(),
@@ -245,16 +252,42 @@ class CustomModel:
 
         history = self.get_model().fit(
             training,
-
             validation_data=validation,
-
             epochs=get_epochs(),
-
             callbacks=self.get_callbacks(),
-
             shuffle=True,
+            validation_freq=450,
+            use_multiprocessing=False
+        )
 
-            validation_freq=250
+        self.class_names = history
+
+        self.log_history(
+            history
+        )
+
+        self.get_model().save(
+            '/tmp/horus.tf',
+            save_format='tf',
+            include_optimizer=True
+        )
+
+    def log_history(
+            self,
+            value: History
+    ):
+        wandb.init().log(
+            {
+                'params': value.params,
+                'epoch': value.epoch,
+            }
+        )
+
+    def log_inputs(self, inputs):
+        wandb.init().log(
+            {
+                'input_values': inputs
+            }
         )
 
     def get_model(self) -> Model:
