@@ -71,8 +71,10 @@ def get_seed() -> int:
 
     if seed is None:
         set_seed(
-            get_value_from_global_algorithm_settings(
-                'seed'
+            int(
+                get_value_from_global_algorithm_settings(
+                    'seed'
+                )
             )
         )
 
@@ -91,8 +93,10 @@ def get_max_classes() -> int:
 
     if max_classes is None:
         set_max_classes(
-            get_value_from_global_dataset_settings(
-                'categories'
+            int(
+                get_value_from_global_dataset_settings(
+                    'categories'
+                )
             )
         )
 
@@ -111,20 +115,24 @@ def get_batch_size() -> int:
 
     if batch_size is None:
         set_batch_size(
-            get_value_from_global_algorithm_settings(
-                'batch_size'
+            int(
+                get_value_from_global_algorithm_settings(
+                    'batch_size'
+                )
             )
         )
 
     return batch_size
 
 
-def set_batch_size(value: int):
+def set_batch_size(
+        value: int
+):
     global batch_size
     batch_size = value
 
 
-def get_validation_split() -> int:
+def get_validation_split() -> float:
     global validation_split
 
     if validation_split is None:
@@ -137,7 +145,7 @@ def get_validation_split() -> int:
     return validation_split
 
 
-def set_validation_split(value: int):
+def set_validation_split(value: float):
     global validation_split
     validation_split = value
 
@@ -222,21 +230,21 @@ def set_epochs(
     epochs = value
 
 
-def get_image_color_channels() -> str:
+def get_image_color_channels() -> int:
     global image_color_channels
 
     if image_color_channels is None:
         set_image_color_channels(
             get_value_from_global_images_settings(
                 'color'
-            )['mode']
+            )['channels']
         )
 
     return image_color_channels
 
 
 def set_image_color_channels(
-        value: str
+        value: int
 ):
     global image_color_channels
     image_color_channels = value

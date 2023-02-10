@@ -38,13 +38,18 @@ class Domain:
             self.__wandb.execute()
 
     def execute(self):
-        self.model.fit(
+        self.get_model().compile()
+
+        self.get_model().fit(
             get_dataset_path_from_settings()
         )
 
     def garbage_collection(self):
         if not self.is_wandb_none:
             self.get_wandb().clear()
+
+    def get_model(self) -> CustomModel:
+        return self.model
 
     def get_wandb(self) -> SetupWandb:
         return self.__wandb

@@ -6,74 +6,73 @@ from randomizer \
     import generate_seed
 
 
-def setup():
-    set_global_settings(
+set_global_settings(
+    {
+        'dataset':
         {
-            'dataset':
+            'path': '/mnt/c/DataSets/BigDataSet/dataset',
+            'categories': 5
+        },
+
+        'log':
+        {
+            'path': '/tmp/logs/'
+        },
+
+        'algorithm':
+        {
+            'model':
+            {
+                'name': 'Horus'
+            },
+
+            'path': '/home/madsen/models',
+
+            'batch_size': 1,
+            'epochs': 1,
+
+            'seed': generate_seed(),
+
+            'validation':
                 {
-                    'path': '/mnt/c/DataSets/ScreenshotAsDataset/women_dataset/dataset',
-                    'categories': 4
+                    'split': 0.2
                 },
 
-            'log':
+            'checkpoint':
                 {
-                    'path': '/tmp/logs/'
-                },
-
-            'algorithm':
-                {
-                    'model':
+                    'path': '/tmp/checkpoint',
+                    'save':
                         {
-                            'name': 'Horus'
+                            'only':
+                            {
+                                'weights': False,
+                                'best': True
+                            },
+
+                            'frequency': 4,
+                            'execution-steps': 50
                         },
-                    'path': '/home/madsen/models',
-
-                    'batch_size': 2,
-                    'epochs': 1,
-
-                    'seed': generate_seed(),
-
-                    'validation':
+                    'monitor':
                         {
-                            'split': 0.2
+                            'monitor': 'accuracy',
+                            'threshold': 'max'
                         },
-
-                    'checkpoint':
-                        {
-                            'path': '/tmp/checkpoint',
-                            'save':
-                                {
-                                    'only':
-                                        {
-                                            'weights': False,
-                                            'best': True
-                                        },
-
-                                    'frequency': 4,
-                                    'execution-steps': 50
-                                },
-
-                            'monitor':
-                                {
-                                    'monitor': 'accuracy',
-                                    'threshold': 'max'
-                                },
-
-                            'output': True
-                        }
+                    'output': True
                 },
+            },
 
-            'images':
+        'images':
+            {
+                'width': 512,
+                'height': 512,
+
+                'keep_aspect_ratio': True,
+
+                'color':
                 {
-                    'width': 256,
-                    'height': 256,
-
-                    'keep_aspect_ratio': True,
-
-                    'color':
-                        {
-                            'mode': 'rgb'
-                        }
+                    'mode': 'rgb',
+                    'channels': 3
                 }
-        }
-    )
+            }
+    }
+)

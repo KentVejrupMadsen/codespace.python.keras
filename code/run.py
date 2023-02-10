@@ -1,3 +1,5 @@
+import config
+
 from custom.domain \
     import Domain
 
@@ -12,13 +14,11 @@ import os
 import time
 
 import auto
-import config
 
 import log
+
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
-# Setup of configuration
-config.setup()
 
 set_wandb_name(
     'Run-Experiment-'
@@ -49,7 +49,6 @@ set_wandb_sync_tensorboard(
 def main():
     domain = Domain()
     domain.initialise()
-    domain.debug()
 
     domain.execute()
     log.log_setup()

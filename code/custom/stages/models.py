@@ -1,15 +1,16 @@
-import keras
-
 from keras \
-    import layers
-from keras.layers import Rescaling
-from keras.utils import image_dataset_from_directory
+    import layers, Input, Model
+
+from keras.layers \
+    import Rescaling
+
+from keras.utils \
+    import image_dataset_from_directory
 
 from tensorflow.python.keras.callbacks \
     import \
     EarlyStopping, \
     ModelCheckpoint
-from custom.configuration.global_entries import get_image_color_channels
 
 from custom.configuration.global_entries \
     import \
@@ -21,10 +22,9 @@ from custom.configuration.global_entries \
     get_preserve_aspect, \
     get_max_classes, \
     get_model_name, \
-    get_seed
-
-from custom.domain \
-    import get_dataset_path_from_settings
+    get_seed, \
+    get_image_color_mode, \
+    get_image_color_channels
 
 
 class CustomModel:
@@ -35,63 +35,53 @@ class CustomModel:
                     get_image_height(),
                     get_image_color_channels()
             ),
-
             batch_size: int = get_batch_size(),
 
-            x: int = 5,
-            y: int = 128,
+            model_size_width: int = 5,
+            model_size_height: int = 128,
 
             max_classes: int = get_max_classes(),
 
             image_width: int = get_image_width(),
             image_height: int = get_image_height(),
 
-            color_mode: str = 'rgb',
+            color_mode: str = get_image_color_mode(),
             preserve_aspect: bool = get_preserve_aspect(),
 
             seed: int = get_seed(),
-            split_dataset_for_validation: int = get_validation_split()
+            split_dataset_for_validation: int = get_validation_split(),
+            kernel_value: tuple = (3, 3),
+            color_channels: int = get_image_color_channels()
     ):
-        self.input = keras.Input(
+        self.kernel = kernel_value
+
+        self.input = Input(
             shape=input_node
         )
-        self.output = None
 
+        self.output = None
         self.model = None
 
         self.image_width = image_width
         self.image_height = image_height
-        self.image_color_mode = color_mode
         self.image_preserve_aspect = preserve_aspect
+        self.image_color_mode = color_mode
+        self.color_channels = color_channels
+
         self.seed = seed
         self.batch_size = batch_size
+        self.categories = max_classes
 
         self.predict = None
-
-        self.setup(
-            x,
-            y,
-            max_classes
-        )
 
         self.split_sample = split_dataset_for_validation
 
         self.callbacks = []
 
-    def get_batch_size(self):
-        return self.batch_size
-
-    def get_seed(self) -> int:
-        return self.seed
-
-    def get_validation_split(self) -> float:
-        return self.split_sample
-
-    def get_image_preserve_aspect(self):
-        return self.image_preserve_aspect
-
-    def get_image_color_mode(self) -> str:
-        return self.image_color_mode
+        self.setup(
+            model_size_width,
+            model_size_height
+        )
 
     def early_stopper_added(self):
         callbacks = self.callbacks
@@ -126,20 +116,19 @@ class CustomModel:
 
     def setup(
             self,
-            x: int,
-            y: int,
-            max_classes: int
+            mid_width_x: int,
+            mid_height_y: int
     ):
-        start_layer = y / 2
+        start_layer = mid_height_y / 2
 
         first_layer_in_mid = layers.Conv2D(
             start_layer,
-            (3, 3),
+            self.get_kernel(),
             activation='relu',
             input_shape=(
                 self.get_image_width(),
                 self.get_image_height(),
-                get_image_color_channels()
+                self.get_color_channels()
             )
         )
 
@@ -148,25 +137,29 @@ class CustomModel:
         )
 
         mid_layers = layers.Conv2D(
-            y,
-            (3, 3),
+            mid_height_y,
+            self.get_kernel(),
             activation='relu',
-            input_shape=(32, 32, 3)
+            input_shape=(
+                self.get_image_width()/2,
+                self.get_image_height()/2,
+                self.get_color_channels()
+            )
         )(mid_layers)
 
         mid_layers = layers.MaxPooling2D(
             (2, 2)
         )(mid_layers)
 
-        end_pos = x - 2
+        end_pos = mid_width_x - 2
 
         for idx in range(
                 0,
                 end_pos
         ):
             mid_layers = layers.Conv2D(
-                y,
-                (3, 3),
+                mid_height_y,
+                self.get_kernel(),
                 activation='relu'
             )(mid_layers)
 
@@ -175,22 +168,25 @@ class CustomModel:
         )(mid_layers)
 
         self.output = layers.Conv2D(
-            y,
-            (3, 3),
+            mid_height_y,
+            self.get_kernel(),
             activation='relu'
         )(mid_layers)
 
-        x = layers.Flatten()(self.output)
+        mid_width_x = layers.Flatten()(self.output)
+
         prediction = layers.Dense(
-            max_classes,
+            self.get_max_categories(),
             activation='softmax'
-        )(x)
+        )(mid_width_x)
         self.output = prediction
 
-        self.model = keras.Model(
-            inputs=self.input,
-            outputs=self.output,
-            name=get_model_name()
+        self.set_model(
+            Model(
+                inputs=self.input,
+                outputs=self.output,
+                name=get_model_name()
+            )
         )
 
         self.model.summary()
@@ -247,22 +243,25 @@ class CustomModel:
 
         Rescaling(1. / 255)
 
-        history = self.model.get_model().fit(
+        history = self.get_model().fit(
             training,
 
             validation_data=validation,
 
             epochs=get_epochs(),
 
-            callbacks=self.model.get_callbacks(),
+            callbacks=self.get_callbacks(),
 
             shuffle=True,
 
             validation_freq=250
         )
 
-    def get_model(self) -> keras.Model:
+    def get_model(self) -> Model:
         return self.model
+
+    def set_model(self, value: Model):
+        self.model = value
 
     def get_callbacks(self) -> list:
         return self.callbacks
@@ -280,3 +279,27 @@ class CustomModel:
 
     def get_image_height(self) -> int:
         return self.image_height
+
+    def get_color_channels(self):
+        return self.color_channels
+
+    def get_max_categories(self):
+        return self.categories
+
+    def get_kernel(self):
+        return self.kernel
+
+    def get_batch_size(self):
+        return self.batch_size
+
+    def get_seed(self) -> int:
+        return self.seed
+
+    def get_validation_split(self) -> float:
+        return self.split_sample
+
+    def get_image_preserve_aspect(self):
+        return self.image_preserve_aspect
+
+    def get_image_color_mode(self) -> str:
+        return self.image_color_mode
