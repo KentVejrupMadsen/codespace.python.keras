@@ -17,23 +17,21 @@ from custom.configuration.wandb_variables \
 from custom.configuration.tensorflow_settings \
     import get_global_settings
 
-
-def get_batch_size_from_settings():
-    return get_global_settings()['algorithm']['batch_size']
-
-
-def get_width_from_settings():
-    return get_global_settings()['images']['width']
-
-
-def get_height_from_settings():
-    return get_global_settings()['images']['height']
+from custom.configuration.global_entries \
+    import \
+    get_image_width, \
+    get_image_height, \
+    get_max_classes, \
+    get_epochs, \
+    get_batch_size, \
+    get_validation_split, \
+    get_preserve_aspect
 
 
 def get_image_size_from_settings():
     return (
-        get_width_from_settings(),
-        get_height_from_settings()
+        get_image_width(),
+        get_image_height()
     )
 
 
@@ -46,8 +44,8 @@ class Domain:
         self.setup = Setup()
         self.model = CustomModel(
             (
-                get_width_from_settings(),
-                get_height_from_settings(),
+                get_image_width(),
+                get_image_height(),
                 3
             )
         )
@@ -65,9 +63,9 @@ class Domain:
             self.__wandb.execute()
 
     def execute(self):
-        batch_size = get_batch_size_from_settings()
+        batch_size = get_batch_size()
 
-        epochs_size = get_global_settings()['algorithm']['epochs']
+        epochs_size = get_epochs()
         seed_size = get_global_settings()['algorithm']['seed']
         validation_split_size = get_global_settings()['algorithm']['validation']['split']
 

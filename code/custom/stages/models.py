@@ -1,21 +1,38 @@
 import keras
 
-import numpy
 from keras \
     import layers
 
-from tensorflow.python.keras.callbacks import EarlyStopping, ModelCheckpoint
+from tensorflow.python.keras.callbacks \
+    import \
+    EarlyStopping, \
+    ModelCheckpoint
+
+from custom.configuration.global_entries \
+    import \
+    get_epochs, \
+    get_batch_size, \
+    get_image_width, \
+    get_image_height, \
+    get_validation_split, \
+    get_preserve_aspect, \
+    get_max_classes, \
+    get_model_name, \
+    get_seed
 
 
 class CustomModel:
     def __init__(
             self,
             input_node: tuple,
-            x: int = 25,
+
+            x: int = 5,
             y: int = 128,
-            max_classes: int = 1000,
-            image_width: int = 128,
-            image_height: int = 128
+
+            max_classes: int = get_max_classes(),
+
+            image_width: int = get_image_width(),
+            image_height: int = get_image_height()
     ):
         self.input = keras.Input(
             shape=input_node
@@ -132,9 +149,12 @@ class CustomModel:
         self.model = keras.Model(
             inputs=self.input,
             outputs=self.output,
-            name='model'
+            name=get_model_name()
         )
 
+        self.model.summary()
+
+    def compile(self):
         self.model.compile(
             loss='SparseCategoricalCrossentropy',
             optimizer='adam',
@@ -143,10 +163,8 @@ class CustomModel:
             ]
         )
 
-        self.model.summary()
-
-    def debug(self):
-        print(self.input.shape)
+    def fit(self, train_set, validation_set):
+        pass
 
     def get_model(self) -> keras.Model:
         return self.model

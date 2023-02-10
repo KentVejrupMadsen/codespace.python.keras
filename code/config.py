@@ -11,17 +11,33 @@ def setup():
         {
             'dataset':
                 {
-                    'path': '/mnt/c/DataSets/ScreenshotAsDataset/women_dataset/dataset'
+                    'path': '/mnt/c/DataSets/ScreenshotAsDataset/women_dataset/dataset',
+                    'categories': 4
                 },
+
+            'log':
+                {
+                    'path': '/tmp/logs/'
+                },
+
             'algorithm':
                 {
+                    'model':
+                        {
+                            'name': 'Horus'
+                        },
+                    'path': '/home/madsen/models',
+
                     'batch_size': 2,
-                    'epochs': 5,
+                    'epochs': 1,
+
                     'seed': generate_seed(),
+
                     'validation':
                         {
                             'split': 0.2
                         },
+
                     'checkpoint':
                         {
                             'path': '/tmp/checkpoint',
@@ -49,8 +65,8 @@ def setup():
 
             'images':
                 {
-                    'width': 128,
-                    'height': 128,
+                    'width': 256,
+                    'height': 256,
 
                     'keep_aspect_ratio': True,
 
