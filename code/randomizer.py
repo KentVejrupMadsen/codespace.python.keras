@@ -1,16 +1,20 @@
 from random \
     import SystemRandom
 
-from sys \
-    import maxsize
-
-max_seed_value = maxsize - 2
+max_seed_value = 4294967295
 min_seed_value = 0
 
 
 def get_maximum_seed_value() -> int:
     global max_seed_value
     return max_seed_value
+
+
+def set_maximum_seed_value(
+        value: int
+) -> None:
+    global max_seed_value
+    max_seed_value = value
 
 
 def get_minimum_seed_value() -> int:

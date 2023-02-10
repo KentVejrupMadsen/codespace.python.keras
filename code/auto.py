@@ -1,5 +1,8 @@
 from custom.configuration.wandb_variables \
-    import get_wandb_tags, set_wandb_notes, set_wandb_group
+    import \
+    get_wandb_tags, \
+    set_wandb_notes, \
+    set_wandb_group
 
 
 def setup_appendices():
@@ -8,6 +11,8 @@ def setup_appendices():
 
 
 def setup_tags():
+    get_wandb_tags().append('GPU')
+    get_wandb_tags().append('GPU-CUDA')
     get_wandb_tags().append('test')
     get_wandb_tags().append('experiment')
     get_wandb_tags().append('vision')

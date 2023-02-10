@@ -2,25 +2,62 @@ from custom.configuration.tensorflow_settings \
     import \
     set_global_settings
 
+from randomizer \
+    import generate_seed
+
 
 def setup():
     set_global_settings(
         {
+            'dataset':
+                {
+                    'path': '/mnt/c/DataSets/ScreenshotAsDataset/women_dataset/dataset'
+                },
             'algorithm':
                 {
-                    'batch_size': 8,
+                    'batch_size': 2,
                     'epochs': 5,
-                    'seed': 4,
-                    'class_mode': '',
+                    'seed': generate_seed(),
+                    'validation':
+                        {
+                            'split': 0.2
+                        },
+                    'checkpoint':
+                        {
+                            'path': '/tmp/checkpoint',
+                            'save':
+                                {
+                                    'only':
+                                        {
+                                            'weights': False,
+                                            'best': True
+                                        },
+
+                                    'frequency': 4,
+                                    'execution-steps': 50
+                                },
+
+                            'monitor':
+                                {
+                                    'monitor': 'accuracy',
+                                    'threshold': 'max'
+                                },
+
+                            'output': True
+                        }
                 },
 
-            'image':
+            'images':
                 {
-                    'width': 256,
-                    'height': 256,
+                    'width': 128,
+                    'height': 128,
 
-                    'color_mode': 'rgb',
                     'keep_aspect_ratio': True,
+
+                    'color':
+                        {
+                            'mode': 'rgb'
+                        }
                 }
         }
     )

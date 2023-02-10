@@ -11,3 +11,4 @@ def set_global_settings(
 ) -> None:
     global global_settings
     global_settings = value
+
