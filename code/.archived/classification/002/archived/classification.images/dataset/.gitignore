@@ -1,0 +1,13 @@
+# Images
+*.jpg
+*.jpeg
+
+*.png
+
+*.tiff
+*.svg
+
+# Data formats
+*.xml
+*.csv
+*.json

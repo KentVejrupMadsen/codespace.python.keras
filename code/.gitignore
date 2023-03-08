@@ -1,3 +1,6 @@
-.venv/*
-wandb/*
-__pycache__/*
+.ipynb_checkpoints
+model.tf/*
+
+*.png
+*.jpg
+*.jpeg

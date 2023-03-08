@@ -5,3 +5,5 @@ cache/*
 
 *.pyc
 *.out
+
+.venv/*
