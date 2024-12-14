@@ -1,0 +1,10 @@
+numpy
+pillow
+matplotlib
+requests
+tensorflow
+keras
+ipympl
+opencv-python
+jupyter
+jupyterlab

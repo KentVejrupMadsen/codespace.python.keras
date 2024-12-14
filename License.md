@@ -1,5 +1,5 @@
 # Mit license
-Copyright 2023 Kent vejrup Madsen
+Copyright 2024 Kent vejrup Madsen
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of 
 this software and associated documentation files (the "Software"), 
